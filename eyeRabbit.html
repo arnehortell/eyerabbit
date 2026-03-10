@@ -1,221 +1,229 @@
 <!doctype html>
 <html lang="sv">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Kanin-hopp ögonträning</title>
-  <style>
-    :root {
-      --bg: #000;
-      --size: 220px;
-      --overlap: 42px;
-      --show-time: 3000ms;
-      --hide-time: 250ms;
-    }
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Kanin-hopp ögonträning</title>
+<style>
 
-    * { box-sizing: border-box; }
+:root{
+  --bg:#000;
+  --show-time:3000ms;
+}
 
-    html, body {
-      margin: 0;
-      width: 100%;
-      height: 100%;
-      background: var(--bg);
-      overflow: hidden;
-      font-family: Arial, Helvetica, sans-serif;
-    }
+*{box-sizing:border-box}
 
-    body {
-      display: grid;
-      place-items: center;
-    }
+html,body{
+  margin:0;
+  width:100%;
+  height:100%;
+  background:#000;
+  overflow:hidden;
+}
 
-    .stage {
-      position: relative;
-      width: 1920px;
-      height: 1080px;
-      background: #000;
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      grid-template-rows: 1fr 1fr 1fr;
-      padding: 48px 64px;
-      gap: 0;
-      transform-origin: center center;
-    }
+body{
+  display:grid;
+  place-items:center;
+}
 
-    .cell {
-      position: relative;
-      display: flex;
-      pointer-events: none;
-    }
+.stage{
+  width:1920px;
+  height:1080px;
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  grid-template-rows:1fr 1fr 1fr;
+  padding:70px;
+}
 
-    .top { align-items: flex-start; }
-    .middle { align-items: center; }
-    .bottom { align-items: flex-end; }
+.cell{
+  display:flex;
+}
 
-    .left { justify-content: flex-start; }
-    .center { justify-content: center; }
-    .right { justify-content: flex-end; }
+.top{align-items:flex-start}
+.middle{align-items:center}
+.bottom{align-items:flex-end}
 
-    .bunny {
-      position: relative;
-      width: calc(var(--size) + var(--size) - var(--overlap));
-      height: calc(var(--size) + var(--size) - var(--overlap));
-      opacity: 0;
-      transform: scale(0.92);
-      transition: opacity 180ms ease, transform 180ms ease;
-    }
+.left{justify-content:flex-start}
+.center{justify-content:center}
+.right{justify-content:flex-end}
 
-    .bunny.visible {
-      opacity: 1;
-      transform: scale(1);
-    }
+.bunny{
+  width:260px;
+  height:230px;
+  opacity:0;
+  transition:opacity .2s ease;
+}
 
-    .circle {
-      position: absolute;
-      width: var(--size);
-      height: var(--size);
-      border-radius: 50%;
-      mix-blend-mode: screen;
-      filter: saturate(1.2);
-    }
+.bunny.visible{
+  opacity:1;
+}
 
-    .red {
-      left: 0;
-      top: calc((var(--size) - (var(--size) - var(--overlap))) / 2);
-      background: rgb(255, 0, 0);
-    }
+svg{
+  width:100%;
+  height:100%;
+}
 
-    .green {
-      left: calc(var(--size) - var(--overlap));
-      top: calc((var(--size) - (var(--size) - var(--overlap))) / 2);
-      background: rgb(0, 255, 0);
-    }
+.circle{
+  mix-blend-mode:screen;
+}
 
-    .blue {
-      left: calc((var(--size) - var(--overlap)) / 2);
-      top: 0;
-      background: rgb(0, 0, 255);
-    }
+.fix-cross{
+  stroke:white;
+  stroke-width:2;
+}
 
-    .hud {
-      position: absolute;
-      left: 20px;
-      bottom: 16px;
-      color: rgba(255,255,255,0.7);
-      font-size: 18px;
-      user-select: none;
-      letter-spacing: 0.03em;
-    }
+.fix-ring{
+  stroke:white;
+  stroke-width:2;
+  fill:none;
+}
 
-    @media (max-width: 1920px), (max-height: 1080px) {
-      .stage {
-        transform: scale(min(calc(100vw / 1920), calc(100vh / 1080)));
-      }
-    }
-  </style>
+.hud{
+  position:absolute;
+  left:20px;
+  bottom:20px;
+  color:#aaa;
+  font-size:18px;
+}
+
+@media (max-width:1920px),(max-height:1080px){
+  .stage{
+    transform:scale(min(calc(100vw / 1920), calc(100vh / 1080)));
+    transform-origin:center;
+  }
+}
+
+</style>
 </head>
 <body>
-  <div class="stage" id="stage">
-    <div class="cell top left" data-pos="A1"></div>
-    <div class="cell top center" data-pos="A2"></div>
-    <div class="cell top right" data-pos="A3"></div>
 
-    <div class="cell middle left" data-pos="B1"></div>
-    <div class="cell middle center" data-pos="B2"></div>
-    <div class="cell middle right" data-pos="B3"></div>
+<div class="stage">
 
-    <div class="cell bottom left" data-pos="C1"></div>
-    <div class="cell bottom center" data-pos="C2"></div>
-    <div class="cell bottom right" data-pos="C3"></div>
+<div class="cell top left"></div>
+<div class="cell top center"></div>
+<div class="cell top right"></div>
 
-    <div class="hud">Mellanslag = start/paus • F = fullscreen • R = ny plats direkt</div>
-  </div>
+<div class="cell middle left"></div>
+<div class="cell middle center"></div>
+<div class="cell middle right"></div>
 
-  <template id="bunny-template">
-    <div class="bunny visible" aria-label="kaninen">
-      <div class="circle red"></div>
-      <div class="circle green"></div>
-      <div class="circle blue"></div>
-    </div>
-  </template>
+<div class="cell bottom left"></div>
+<div class="cell bottom center"></div>
+<div class="cell bottom right"></div>
 
-  <script>
-    const SHOW_MS = 3000;
-    const HIDE_MS = 250;
-    const cells = [...document.querySelectorAll('.cell')];
-    const template = document.getElementById('bunny-template');
+<div class="hud">Space=start/paus • F=fullscreen</div>
 
-    let running = true;
-    let currentCell = null;
-    let currentBunny = null;
-    let timer = null;
+</div>
 
-    function pickNextCell() {
-      const choices = cells.filter(c => c !== currentCell);
-      return choices[Math.floor(Math.random() * choices.length)];
-    }
+<template id="bunny-template">
+<div class="bunny visible">
 
-    function clearCurrent() {
-      if (currentBunny) {
-        currentBunny.classList.remove('visible');
-        const bunnyToRemove = currentBunny;
-        setTimeout(() => bunnyToRemove.remove(), 180);
-        currentBunny = null;
-      }
-    }
+<!--
+RGB-cirklar i 60° triangel.
+Fixationskors + liten vit ring i exakt centrum
+för att hjälpa ögonen att konvergera.
+-->
 
-    function placeBunny() {
-      if (!running) return;
+<svg viewBox="0 0 260 230">
 
-      clearCurrent();
-      currentCell = pickNextCell();
-      currentBunny = template.content.firstElementChild.cloneNode(true);
-      currentCell.appendChild(currentBunny);
+<!-- RGB triangeln -->
+<circle class="circle" cx="130" cy="45" r="80" fill="rgb(0,0,255)" />
+<circle class="circle" cx="60" cy="160" r="80" fill="rgb(255,0,0)" />
+<circle class="circle" cx="200" cy="160" r="80" fill="rgb(0,255,0)" />
 
-      timer = setTimeout(() => {
-        clearCurrent();
-        timer = setTimeout(placeBunny, HIDE_MS);
-      }, SHOW_MS);
-    }
+<!-- Fixationscentrum -->
+<circle class="fix-ring" cx="130" cy="120" r="8" />
 
-    function restartNow() {
-      clearTimeout(timer);
-      clearCurrent();
-      timer = setTimeout(placeBunny, 50);
-    }
+<line class="fix-cross" x1="130" y1="112" x2="130" y2="128" />
+<line class="fix-cross" x1="122" y1="120" x2="138" y2="120" />
 
-    function toggleRunning() {
-      running = !running;
-      clearTimeout(timer);
-      if (running) {
-        restartNow();
-      } else {
-        clearCurrent();
-      }
-    }
+</svg>
 
-    async function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        await document.documentElement.requestFullscreen();
-      } else {
-        await document.exitFullscreen();
-      }
-    }
+</div>
+</template>
 
-    document.addEventListener('keydown', (e) => {
-      if (e.code === 'Space') {
-        e.preventDefault();
-        toggleRunning();
-      }
-      if (e.key.toLowerCase() === 'f') {
-        toggleFullscreen().catch(() => {});
-      }
-      if (e.key.toLowerCase() === 'r') {
-        restartNow();
-      }
-    });
+<script>
 
-    placeBunny();
-  </script>
+const SHOW_MS = 3000
+
+const cells=[...document.querySelectorAll('.cell')]
+const template=document.getElementById('bunny-template')
+
+const centerCell=cells[4] // B2
+
+let running=true
+let currentCell=null
+let currentBunny=null
+
+function pickNext(){
+
+// 40% chans att använda mittenrutan
+if(Math.random()<0.4) return centerCell
+
+const choices=cells.filter(c=>c!==currentCell)
+
+return choices[Math.floor(Math.random()*choices.length)]
+
+}
+
+function clearCurrent(){
+
+if(currentBunny){
+currentBunny.remove()
+currentBunny=null
+}
+
+}
+
+function place(){
+
+if(!running) return
+
+clearCurrent()
+
+currentCell=pickNext()
+
+currentBunny=template.content.firstElementChild.cloneNode(true)
+
+currentCell.appendChild(currentBunny)
+
+setTimeout(place,SHOW_MS)
+
+}
+
+function toggle(){
+
+running=!running
+
+if(running) place()
+else clearCurrent()
+
+}
+
+async function fullscreen(){
+
+if(!document.fullscreenElement)
+await document.documentElement.requestFullscreen()
+else
+await document.exitFullscreen()
+
+}
+
+document.addEventListener('keydown',e=>{
+
+if(e.code==='Space'){
+ e.preventDefault()
+ toggle()
+}
+
+if(e.key==='f'||e.key==='F') fullscreen()
+
+})
+
+place()
+
+</script>
+
 </body>
 </html>
+
